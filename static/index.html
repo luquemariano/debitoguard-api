@@ -6,7 +6,6 @@
     <title>DebitoGuard - Pre-Auditoría Médica</title>
     <!-- Fuentes e Iconos -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <style>
         :root {
             --bg-color: #0f172a;
@@ -47,8 +46,10 @@
         }
         input:focus, textarea:focus { outline: none; border-color: var(--accent); }
 
+        .btn-group { display: flex; gap: 0.5rem; margin-top: 1rem; }
+
         .btn-submit {
-            width: 100%;
+            flex: 2;
             padding: 0.85rem;
             background: var(--accent);
             color: #0f172a;
@@ -57,9 +58,21 @@
             border-radius: 8px;
             cursor: pointer;
             transition: background 0.2s;
-            margin-top: 1rem;
         }
         .btn-submit:hover { background: var(--accent-hover); }
+
+        .btn-clear {
+            flex: 1;
+            padding: 0.85rem;
+            background: #334155;
+            color: #fff;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-clear:hover { background: #475569; }
 
         /* Estilos del Dictamen / Resultado */
         .badge {
@@ -92,32 +105,46 @@
         <!-- Formulario (Frontend de entrada) -->
         <div class="card">
             <h2>Cargar Prestación</h2>
+
+            <!-- Botón / Drag & Drop para PDF -->
+            <div style="background: #0f172a; border: 2px dashed #334155; border-radius: 8px; padding: 1rem; text-align: center; margin-bottom: 1.5rem;">
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.5rem;">📄 Cargar datos automáticamente desde PDF</p>
+                <input type="file" id="pdfFile" accept="application/pdf" style="display: none;" onchange="cargarPDF(this)">
+                <button type="button" onclick="document.getElementById('pdfFile').click()" style="padding: 0.5rem 1rem; background: #334155; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8rem;">
+                    Seleccionar PDF
+                </button>
+                <span id="pdfStatus" style="display: block; font-size: 0.75rem; color: var(--accent); margin-top: 0.5rem;"></span>
+            </div>
+
             <form id="auditForm">
                 <div class="form-group">
                     <label>ID Factura</label>
-                    <input type="text" id="id_factura" value="FAC-2026-101" required>
+                    <input type="text" id="id_factura" placeholder="Ej: FAC-2026-101" required>
                 </div>
                 <div class="form-group">
                     <label>ID Afiliado</label>
-                    <input type="text" id="afiliado_id" value="38492011" required>
+                    <input type="text" id="afiliado_id" placeholder="Ej: 38492011" required>
                 </div>
                 <div class="form-group">
                     <label>Código de Práctica</label>
-                    <input type="text" id="codigo_practica" value="180101" required>
+                    <input type="text" id="codigo_practica" placeholder="Ej: 180101" required>
                 </div>
                 <div class="form-group">
                     <label>Monto Reclamado ($)</label>
-                    <input type="number" id="monto_reclamado" value="40000" required>
+                    <input type="number" id="monto_reclamado" placeholder="Ej: 40000" required>
                 </div>
                 <div class="form-group">
                     <label>Diagnóstico CIE-10</label>
-                    <input type="text" id="diagnostico_cie10" value="J00" required>
+                    <input type="text" id="diagnostico_cie10" placeholder="Ej: K80.2" required>
                 </div>
                 <div class="form-group">
                     <label>Resumen Clínico</label>
-                    <textarea id="resumen_clinico" rows="3" required>Paciente consulta por resfrío común. Se solicita tomografía de rodilla.</textarea>
+                    <textarea id="resumen_clinico" rows="3" placeholder="Describa el cuadro clínico o antecedente del paciente..." required></textarea>
                 </div>
-                <button type="submit" class="btn-submit">Auditar Prestación</button>
+                <div class="btn-group">
+                    <button type="submit" class="btn-submit">Auditar Prestación</button>
+                    <button type="button" class="btn-clear" onclick="limpiarFormulario()">Limpiar</button>
+                </div>
             </form>
         </div>
 
@@ -130,7 +157,7 @@
             </div>
 
             <div id="placeholderResult" style="color: var(--text-secondary); font-size: 0.9rem;">
-                Complete el formulario y haga clic en <b>Auditar Prestación</b> para ver el dictamen en tiempo real.
+                Complete el formulario o cargue un PDF y haga clic en <b>Auditar Prestación</b> para ver el dictamen en tiempo real.
             </div>
 
             <div id="resultBox" class="result-box">
@@ -150,7 +177,52 @@
 </div>
 
 <script>
-    // Conexión JavaScript: Captura el evento del formulario y llama al Backend
+    // Limpiar formulario y restablecer panel de dictamen
+    function limpiarFormulario() {
+        document.getElementById('auditForm').reset();
+        document.getElementById('pdfStatus').innerText = "";
+        document.getElementById('resultBox').style.display = 'none';
+        document.getElementById('placeholderResult').style.display = 'block';
+    }
+
+    // 1. Conexión para autocompletar datos desde el PDF subido
+    async function cargarPDF(input) {
+        if (!input.files || !input.files[0]) return;
+
+        const statusSpan = document.getElementById('pdfStatus');
+        statusSpan.innerText = "⏳ Extrayendo datos del PDF con IA...";
+
+        const formData = new FormData();
+        formData.append('file', input.files[0]);
+
+        try {
+            const res = await fetch('/extraer-pdf/', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await res.json();
+
+            if (data.error) {
+                statusSpan.innerText = "❌ " + data.error;
+                return;
+            }
+
+            // Autocompletar los campos del formulario con lo que leyó la IA
+            if (data.id_factura) document.getElementById('id_factura').value = data.id_factura;
+            if (data.afiliado_id) document.getElementById('afiliado_id').value = data.afiliado_id;
+            if (data.codigo_practica) document.getElementById('codigo_practica').value = data.codigo_practica;
+            if (data.monto_reclamado !== undefined) document.getElementById('monto_reclamado').value = data.monto_reclamado;
+            if (data.diagnostico_cie10) document.getElementById('diagnostico_cie10').value = data.diagnostico_cie10;
+            if (data.resumen_clinico) document.getElementById('resumen_clinico').value = data.resumen_clinico;
+
+            statusSpan.innerText = "✅ ¡Campos autocompletados con éxito!";
+        } catch (err) {
+            statusSpan.innerText = "❌ Error al procesar el archivo PDF.";
+        }
+    }
+
+    // 2. Conexión JavaScript: Captura el evento del formulario y llama al Backend para Auditar
     document.getElementById('auditForm').addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -162,7 +234,7 @@
         resultBox.style.display = 'none';
         loading.style.display = 'block';
 
-        // 1. Armar el payload JSON
+        // Armar el payload JSON
         const payload = {
             id_factura: document.getElementById('id_factura').value,
             afiliado_id: document.getElementById('afiliado_id').value,
@@ -174,7 +246,7 @@
         };
 
         try {
-            // 2. LA MAGIA: Petición HTTP Fetch al Backend de FastAPI
+            // Petición HTTP Fetch al Backend de FastAPI
             const response = await fetch('/auditar-factura/', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -183,7 +255,7 @@
 
             const data = await response.json();
 
-            // 3. Renderizar la respuesta del Backend en el Frontend
+            // Renderizar la respuesta del Backend en el Frontend
             loading.style.display = 'none';
             resultBox.style.display = 'block';
 
