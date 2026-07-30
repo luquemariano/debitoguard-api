@@ -1,4 +1,8 @@
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+import os
+
 from app.models import FacturaMedica, DictamenAuditoria
 from app.rules import evaluar_factura
 
@@ -8,11 +12,14 @@ app = FastAPI(
     version="0.1.0"
 )
 
-@app.get("/")
-def read_root():
-    return {"status": "ok", "system": "DebitoGuard API"}
+# Servir archivos estáticos (HTML, CSS, JS) desde la carpeta 'static'
+os.makedirs("static", exist_ok=True)
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+@app.get("/", include_in_schema=False)
+async def serve_frontend():
+    return FileResponse("static/index.html")
 
 @app.post("/auditar-factura/", response_model=DictamenAuditoria)
 def auditar_factura(factura: FacturaMedica):
-    # Delegamos toda la lógica de evaluación al módulo de reglas
     return evaluar_factura(factura)
