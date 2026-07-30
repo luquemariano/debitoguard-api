@@ -179,16 +179,3 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
-
-# --- Reglas Personalizadas ---
-# Entorno virtual local
-.venv/
-venv/
-ENV/
-
-# Variables de entorno secretas (Claves API)
-.env
-
-# Bases de datos locales
-*.db
-*.sqlite3
