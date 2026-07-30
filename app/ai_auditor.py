@@ -1,18 +1,17 @@
 import os
 from dotenv import load_dotenv
-from google import genai
+from groq import Groq
 from app.models import FacturaMedica
 
 load_dotenv()
 
-api_key = os.getenv("GEMINI_API_KEY")
-client = genai.Client(api_key=api_key)
+groq_api_key = os.getenv("GROQ_API_KEY")
+client = Groq(api_key=groq_api_key) if groq_api_key else None
 
 def analizar_coherencia_clinica(factura: FacturaMedica) -> str:
-    """
-    Consulta a la API de Gemini para auditar la coherencia semántica 
-    entre el diagnóstico CIE-10, la prestación solicitada y el resumen clínico.
-    """
+    if not client:
+        return "IA Check no configurado: Falta GROQ_API_KEY en el .env"
+
     if not factura.resumen_clinico:
         return "No se adjuntó resumen clínico para análisis semántico."
 
@@ -32,21 +31,11 @@ def analizar_coherencia_clinica(factura: FacturaMedica) -> str:
     2. El motivo médico brevísimo.
     """
 
-    # Intentamos primero con gemini-2.0-flash y si no con gemini-2.0-flash-exp
-    modelos_a_probar = ['gemini-2.0-flash', 'gemini-2.0-flash-exp']
-
-    for modelo in modelos_a_probar:
-        try:
-            response = client.models.generate_content(
-                model=modelo,
-                contents=prompt,
-            )
-            return response.text.strip()
-        except Exception as e:
-            error_str = str(e)
-            if "429" in error_str or "RESOURCE_EXHAUSTED" in error_str:
-                return "IA Check (En espera): Límite de cuota gratuita alcanzado temporalmente. Reintentar en 1 minuto."
-            # Si el modelo no se encuentra, el bucle prueba el siguiente
-            continue
-
-    return "No se pudo conectar con el modelo de IA. Verifique disponibilidad de modelos en su cuenta de Google AI Studio."
+    try:
+        response = client.chat.completions.create(
+            messages=[{"role": "user", "content": prompt}],
+            model="llama-3.3-70b-versatile",
+        )
+        return response.choices[0].message.content.strip()
+    except Exception as e:
+        return f"Error en IA Check: {str(e)}"

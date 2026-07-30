@@ -1,46 +1,34 @@
 from app.models import FacturaMedica, DictamenAuditoria
-from app.ai_auditor import analizar_coherencia_clinica  # <-- Importamos el nuevo módulo
-
-NOMENCLADOR_ARANCELES = {
-    "420101": 20000.0,   # Consulta médica
-    "180101": 45000.0,   # Ecografía abdominal
-    "340201": 120000.0,  # Tomografía computada
-}
+from app.ai_auditor import analizar_coherencia_clinica
 
 def evaluar_factura(factura: FacturaMedica) -> DictamenAuditoria:
-    resultado = "APROBADA"
-    motivo = "Sin objeciones preliminares"
-
-    # Regla 1: Validar si la práctica existe en el Nomenclador
-    if factura.codigo_practica not in NOMENCLADOR_ARANCELES:
+    # 1. Reglas duras de auditoría algorítmica
+    if factura.monto_reclamado > 500000:
         return DictamenAuditoria(
             status="procesado",
             factura_id=factura.id_factura,
             dictamen="RECHAZADA",
-            motivo=f"La práctica {factura.codigo_practica} no existe en el nomenclador convenido",
+            motivo="El monto supera el tope máximo de aprobación automática ($500.000).",
             monto_evaluado=factura.monto_reclamado,
-            analisis_ia="No evaluado debido a rechazo por nomenclador"
+            analisis_ia="No requerido por rechazo administrativo previo."
         )
 
-    # Regla 2: Validar sobreprecio
-    precio_maximo = NOMENCLADOR_ARANCELES[factura.codigo_practica]
-    if factura.monto_reclamado > precio_maximo:
-        resultado = "OBSERVADA"
-        motivo = f"Monto reclamado (${factura.monto_reclamado}) supera el arancel tope (${precio_maximo}) para la práctica {factura.codigo_practica}"
+    # 2. Análisis Semántico con IA (Groq / Llama 3)
+    resultado_ia = analizar_coherencia_clinica(factura)
 
-    # Regla 3: Diagnóstico obligatorio para la práctica 420101
-    elif factura.codigo_practica == "420101" and not factura.diagnostico_cie10:
-        resultado = "RECHAZADA"
-        motivo = "La práctica 420101 requiere código de diagnóstico CIE-10 obligatorio"
-
-    # Evaluamos la coherencia clínica mediante el módulo de IA
-    evaluacion_ia = analizar_coherencia_clinica(factura)
+    # 3. Lógica cruzada: Si la IA encuentra la justificación DÉBIL u objetada
+    if "DÉBIL" in resultado_ia.upper() or "NO JUSTIFICADA" in resultado_ia.upper():
+        dictamen_final = "OBSERVADA"
+        motivo_final = "Sugerencia de objeción clínica por inconsistencia médica detectada por IA."
+    else:
+        dictamen_final = "APROBADA"
+        motivo_final = "Sin objeciones preliminares."
 
     return DictamenAuditoria(
         status="procesado",
         factura_id=factura.id_factura,
-        dictamen=resultado,
-        motivo=motivo,
+        dictamen=dictamen_final,
+        motivo=motivo_final,
         monto_evaluado=factura.monto_reclamado,
-        analisis_ia=evaluacion_ia  # <-- Retornamos el análisis del módulo IA
+        analisis_ia=resultado_ia
     )
