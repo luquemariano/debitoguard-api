@@ -14,10 +14,17 @@ Está orientada a problemáticas habituales de obras sociales, prepagas, clínic
 
 ## 🚀 Características Principales
 
-* **📄 OCR & Extracción Inteligente (PDF):** Procesa archivos PDF de órdenes médicas e extrae automáticamente el ID de factura, afiliado, código de práctica, CIE-10 y resumen clínico.
-* **🧠 Auditoría Clínica con IA (Groq / Llama 3.3):** Evalúa si la práctica solicitada tiene una justificación médica sólida respecto al diagnóstico CIE-10 e historial del paciente.
-* **⚡ Lógica Híbrida de Reglas (FastAPI + Pydantic):** Valida topes administrativos y montos máximos antes de consultar a la IA, optimizando costos de procesamiento.
-* **💻 Dashboard Interactivo (Frontend Integrado):** Interfaz web responsive para carga manual o vía PDF con respuesta visual en tiempo real (APROBADA, OBSERVADA, RECHAZADA).
+- **📄 Procesamiento de documentos:** permite cargar órdenes médicas en formato PDF y extraer los campos relevantes para su revisión.
+
+- **🔎 Validaciones administrativas:** aplica reglas configurables sobre montos, códigos, documentación y datos obligatorios.
+
+- **🧠 Análisis asistido por IA:** genera observaciones orientativas sobre la relación entre la información registrada, el diagnóstico informado y la práctica solicitada.
+
+- **🚦 Priorización de casos:** clasifica las solicitudes según el nivel de revisión requerido.
+
+- **📝 Resultados explicables:** informa qué reglas fueron aplicadas y cuáles fueron las observaciones detectadas.
+
+- **💻 Interfaz web integrada:** permite realizar cargas manuales o documentales y consultar los resultados de manera visual. 
 
 ---
 
