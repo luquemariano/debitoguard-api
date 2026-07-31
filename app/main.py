@@ -8,8 +8,12 @@ from app.rules import evaluar_factura
 from app.ai_auditor import extraer_datos_desde_pdf
 
 app = FastAPI(
-    title="DebitoGuard API",
-    description="Pre-Auditor Algorítmico de Facturas Médicas con IA",
+    title="DébitoGuard Health API",
+    description=(
+        "API de apoyo para la preauditoría administrativa de órdenes "
+        "y facturación médica mediante reglas de negocio e inteligencia artificial. "
+        "Los resultados son orientativos y requieren revisión humana."
+    ),
     version="0.1.0"
 )
 
