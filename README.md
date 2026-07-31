@@ -1,9 +1,3 @@
-
-
-
-# 🛡️ DebitoGuard Health API
-> **Sistema Inteligente de Pre-Auditoría de Facturas Médicas & Extracción de Órdenes con IA**
-
 # 🛡️ DébitoGuard Health API
 
 > **API de apoyo para la preauditoría administrativa de órdenes y facturación médica**
