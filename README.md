@@ -73,9 +73,141 @@ Para probar la aplicación se recomienda utilizar únicamente información sint�
 ---
 <img width="717" height="590" alt="WhatsApp Image 2026-07-31 at 01 28 28" src="https://github.com/user-attachments/assets/8efa1cc8-4d43-4c0d-aee8-946a6dee96ca" />
 
-## ⚙️ Instalación y Configuración Local
 
-1. **Clonar el repositorio:**
-   ```bash
-   git clone https://github.com/luquemariano/debitoguard-api.git
-   cd debitoguard-api
+## ⚙️ Instalación y configuración local
+
+### 1. Clonar el repositorio
+
+```bash
+git clone https://github.com/luquemariano/debitoguard-api.git
+cd debitoguard-api
+```
+
+### 2. Crear un entorno virtual
+
+En Windows PowerShell:
+
+```powershell
+py -m venv .venv
+```
+
+### 3. Activar el entorno virtual
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+Cuando el entorno esté activo, la terminal debería mostrar `(.venv)` al comienzo de la línea.
+
+Si PowerShell bloquea la activación, ejecutá una sola vez:
+
+```powershell
+Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+```
+
+Luego volvé a ejecutar:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+### 4. Instalar las dependencias
+
+```powershell
+py -m pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+### 5. Configurar la API key de Groq
+
+El repositorio incluye un archivo de ejemplo llamado `.env.example`.
+
+Creá una copia llamada `.env`:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+Luego abrí el archivo `.env` y reemplazá:
+
+```text
+GROQ_API_KEY=tu_api_key_de_groq_aqui
+```
+
+por tu clave personal de Groq:
+
+```text
+GROQ_API_KEY=gsk_tu_clave_personal
+```
+
+> No publiques tu clave real en GitHub. El archivo `.env` debe permanecer excluido mediante `.gitignore`.
+
+### 6. Ejecutar la aplicación
+
+Desde la carpeta principal del proyecto:
+
+```powershell
+uvicorn app.main:app --reload
+```
+
+También podés utilizar:
+
+```powershell
+py -m uvicorn app.main:app --reload
+```
+
+### 7. Abrir DébitoGuard
+
+Con el servidor funcionando, abrí en el navegador:
+
+```text
+http://127.0.0.1:8000
+```
+
+La documentación automática de la API estará disponible en:
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+La documentación alternativa estará disponible en:
+
+```text
+http://127.0.0.1:8000/redoc
+```
+
+### 8. Detener el servidor
+
+En la terminal donde está ejecutándose Uvicorn, presioná:
+
+```text
+Ctrl + C
+```
+
+## 📁 Estructura principal
+
+```text
+debitoguard-api/
+├── app/
+│   ├── __init__.py
+│   ├── ai_auditor.py
+│   ├── main.py
+│   ├── models.py
+│   └── rules.py
+├── static/
+│   └── index.html
+├── .env.example
+├── .gitignore
+├── requirements.txt
+└── README.md
+```
+
+## 🔐 Variables de entorno
+
+La aplicación utiliza la siguiente variable:
+
+| Variable | Descripción |
+|---|---|
+| `GROQ_API_KEY` | Clave necesaria para utilizar el análisis y la extracción documental mediante Groq |
+
+La aplicación puede iniciar sin la clave configurada, pero las funciones de inteligencia artificial no estarán disponibles.
