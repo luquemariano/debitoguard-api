@@ -1,10 +1,18 @@
 
 
 
-# 🛡️ DebitoGuard API
+# 🛡️ DebitoGuard Health API
 > **Sistema Inteligente de Pre-Auditoría de Facturas Médicas & Extracción de Órdenes con IA**
 
-DebitoGuard es una API REST y solución analítica diseñada para el sector **HealthTech** (obras sociales, prepagas y sanatorios en Argentina). Evalúa de forma automática facturas y solicitudes de prestaciones médicas combinando **reglas de negocio administrativas** con **modelos de lenguaje (LLM)** para el análisis de coherencia clínica.
+# 🛡️ DébitoGuard Health API
+
+> **API de apoyo para la preauditoría administrativa de órdenes y facturación médica**
+
+DébitoGuard Health API es una solución experimental de HealthTech desarrollada con Python y FastAPI para asistir en el análisis preliminar de documentación médica y administrativa.
+
+La aplicación permite cargar información manualmente o extraer datos desde órdenes médicas en formato PDF. Luego aplica reglas de negocio configurables y utiliza inteligencia artificial para identificar posibles inconsistencias, generar observaciones y priorizar los casos que requieren revisión profesional.
+
+Está orientada a problemáticas habituales de obras sociales, prepagas, clínicas, sanatorios y prestadores de salud de Argentina.
 
 ---
 <img width="710" height="591" alt="WhatsApp Image 2026-07-31 at 01 28 28 (1)" src="https://github.com/user-attachments/assets/a6084180-d219-4166-ab0e-148eb7b47a76" />
