@@ -28,6 +28,40 @@ Está orientada a problemáticas habituales de obras sociales, prepagas, clínic
 
 ---
 
+## ⚠️ Alcance y uso responsable
+
+DébitoGuard Health API es un proyecto demostrativo orientado a la asistencia administrativa y no reemplaza la intervención de auditores médicos, profesionales de la salud ni responsables autorizados.
+
+La aplicación:
+
+- No realiza diagnósticos médicos.
+- No prescribe tratamientos.
+- No autoriza ni rechaza prestaciones de manera definitiva.
+- No debe utilizarse como única fuente para tomar decisiones clínicas o administrativas.
+- Requiere revisión humana antes de cualquier decisión real.
+
+Los resultados generados mediante inteligencia artificial son orientativos y pueden contener errores.
+
+## 👤 Supervisión humana
+
+El flujo de trabajo está diseñado bajo un enfoque **human-in-the-loop**:
+
+1. La aplicación recibe la información.
+2. Se ejecutan validaciones automáticas.
+3. La inteligencia artificial genera observaciones orientativas.
+4. El resultado queda disponible para revisión.
+5. Una persona autorizada toma la decisión final.
+
+La aplicación busca reducir tareas repetitivas y mejorar la organización de la revisión, no reemplazar el criterio profesional.
+
+## 🧪 Datos utilizados en la demostración
+
+Todos los pacientes, prestadores, diagnósticos, órdenes, facturas e importes utilizados en este proyecto son ficticios o fueron creados específicamente para pruebas.
+
+El proyecto no contiene datos reales de pacientes, afiliados, profesionales, instituciones ni organismos de salud.
+
+Para probar la aplicación se recomienda utilizar únicamente información sintética y documentos preparados para demostración.
+
 ## 🛠️ Stack Tecnológico
 
 * **Backend:** Python 3.12+ | FastAPI | Pydantic
