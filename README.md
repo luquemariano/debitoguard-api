@@ -1,12 +1,14 @@
-<img width="874" height="914" alt="Screenshot" src="https://github.com/user-attachments/assets/73a3b456-46f9-4614-a2aa-f3600484db35" />
-<img width="717" height="590" alt="WhatsApp Image 2026-07-31 at 01 28 28" src="https://github.com/user-attachments/assets/8efa1cc8-4d43-4c0d-aee8-946a6dee96ca" />
-<img width="710" height="591" alt="WhatsApp Image 2026-07-31 at 01 28 28 (1)" src="https://github.com/user-attachments/assets/a6084180-d219-4166-ab0e-148eb7b47a76" />
+
+
+
 # 🛡️ DebitoGuard API
 > **Sistema Inteligente de Pre-Auditoría de Facturas Médicas & Extracción de Órdenes con IA**
 
 DebitoGuard es una API REST y solución analítica diseñada para el sector **HealthTech** (obras sociales, prepagas y sanatorios en Argentina). Evalúa de forma automática facturas y solicitudes de prestaciones médicas combinando **reglas de negocio administrativas** con **modelos de lenguaje (LLM)** para el análisis de coherencia clínica.
 
 ---
+<img width="710" height="591" alt="WhatsApp Image 2026-07-31 at 01 28 28 (1)" src="https://github.com/user-attachments/assets/a6084180-d219-4166-ab0e-148eb7b47a76" />
+<img width="874" height="914" alt="Screenshot" src="https://github.com/user-attachments/assets/73a3b456-46f9-4614-a2aa-f3600484db35" />
 
 ## 🚀 Características Principales
 
@@ -26,6 +28,7 @@ DebitoGuard es una API REST y solución analítica diseñada para el sector **He
 * **Control de Versiones:** Git | GitHub
 
 ---
+<img width="717" height="590" alt="WhatsApp Image 2026-07-31 at 01 28 28" src="https://github.com/user-attachments/assets/8efa1cc8-4d43-4c0d-aee8-946a6dee96ca" />
 
 ## ⚙️ Instalación y Configuración Local
 
