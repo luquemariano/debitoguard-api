@@ -77,5 +77,5 @@ Para probar la aplicación se recomienda utilizar únicamente información sint�
 
 1. **Clonar el repositorio:**
    ```bash
-   git clone [https://github.com/luquemariano/debitoguard-api.git](https://github.com/luquemariano/debitoguard-api.git)
+   git clone https://github.com/luquemariano/debitoguard-api.git
    cd debitoguard-api
